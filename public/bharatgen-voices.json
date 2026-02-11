@@ -1,0 +1,110 @@
+[
+  {
+    "id": "bg-hi-aarav",
+    "name": "Aarav",
+    "languageId": "hi",
+    "languageName": "Hindi",
+    "region": "India",
+    "audioUrl": "/voices/bg-hi.wav",
+    "refText": "पुरी हावड़ा एक्सप्रेस"
+  },
+  {
+    "id": "bg-bn-sayan",
+    "name": "Sayan",
+    "languageId": "bn",
+    "languageName": "Bengali",
+    "region": "India",
+    "audioUrl": "/voices/bg-bn.wav",
+    "refText": "শুধু এ খুনের কথা নয়, নীরজার হরণ বৃত্তান্তও প্রকাশ হয়েছে।"
+  },
+  {
+    "id": "bg-gu-darshan",
+    "name": "Darshan",
+    "languageId": "gu",
+    "languageName": "Gujarati",
+    "region": "India",
+    "audioUrl": "/voices/bg-gu.wav",
+    "refText": "આપણે ખરેખર તો કોઈ બીજાને ન લાવવા જોઈએ."
+  },
+  {
+    "id": "bg-kn-kiran",
+    "name": "Kiran",
+    "languageId": "kn",
+    "languageName": "Kannada",
+    "region": "India",
+    "audioUrl": "/voices/bg-kn.wav",
+    "refText": "ಆದರೆ ಈ ಸಣ್ಣ ಮಳಿಗೆಗಳು ಕ್ಯಾಂಡಿ, ಸಣ್ಣ ಆಟಿಕೆಗಳು ಮತ್ತು ಇತರ ಹಬ್ಬದ ನಿಕ್ನಾಕ್ಸ್ಗಳಂತಹ ಸ್ಟಾಕಿಂಗ್ ಸ್ಟಫರ್ಗಳಿಗೆ ಉತ್ತಮ ಆಯ್ಕೆಯಾಗಬಲ್ಲವು."
+  },
+  {
+    "id": "bg-ml-arun",
+    "name": "Arun",
+    "languageId": "ml",
+    "languageName": "Malayalam",
+    "region": "India",
+    "audioUrl": "/voices/bg-ml.wav",
+    "refText": "അവിടുത്തെ സൗകര്യങ്ങളൊക്കെ എന്നെ നന്നായി ആകർഷിച്ചു."
+  },
+  {
+    "id": "bg-te-raghav",
+    "name": "Raghav",
+    "languageId": "te",
+    "languageName": "Telugu",
+    "region": "India",
+    "audioUrl": "/voices/bg-te.wav",
+    "refText": "నా పీహెచ్డీ ప్రోగ్రామ్ అంచనాలు  నన్ను కొంచెం  భయపెడుతున్నాయి."
+  },
+  {
+    "id": "bg-ta-karthik",
+    "name": "Karthik",
+    "languageId": "ta",
+    "languageName": "Tamil",
+    "region": "India",
+    "audioUrl": "/voices/bg-ta.wav",
+    "refText": "சென்னை சென்ட்ரல் விஜயவாடா ஜன் சதாப்தி எக்ஸ்பிரஸ்"
+  },
+  {
+    "id": "bg-en-vikram",
+    "name": "Vikram",
+    "languageId": "en",
+    "languageName": "English",
+    "region": "India",
+    "audioUrl": "/voices/bg-en.wav",
+    "refText": "Some call me nature, others call me mother nature."
+  },
+  {
+    "id": "bg-ur-zain",
+    "name": "Zain",
+    "languageId": "ur",
+    "languageName": "Urdu",
+    "region": "India",
+    "audioUrl": "/voices/bg-ur.wav",
+    "refText": "ہماچل ایکسپریس"
+  },
+  {
+    "id": "bg-or-manoj",
+    "name": "Manoj",
+    "languageId": "or",
+    "languageName": "Odia",
+    "region": "India",
+    "audioUrl": "/voices/bg-or.wav",
+    "refText": "ନିଜର ସାଧୁତା ଯୋଗୁ ସେ ଉଭୟ ଇଉରୋପୀୟ ଓ ନେଟିଭମାନଙ୍କ ଦ୍ୱାରା ସର୍ବତୋଭାବେ ସମ୍ମାନିତ।"
+  },
+  {
+    "id": "bg-pa-gurpreet",
+    "name": "Gurpreet",
+    "languageId": "pa",
+    "languageName": "Punjabi",
+    "region": "India",
+    "audioUrl": "/voices/bg-pa.wav",
+    "refText": "ਮੈਂ ਸੱਚੇ ਦਿਲੋਂ ਸਹੁੰ ਖਾਂਦਾ ਹਾਂ ਕਿ ਮੈਂ ਰਾਸ਼ਟਰ ਦੀ ਏਕਤਾ, ਅਖੰਡਤਾ ਅਤੇ ਸੁਰੱਖਿਆ ਨੂੰ ਬਣਾਈ ਰੱਖਣ ਲਈ ਆਪਣੇ ਆਪ ਨੂੰ ਸਮਰਪਿਤ ਕਰਦਾ ਹਾਂ ਅਤੇ ਇਸ ਸੰਦੇਸ਼ ਨੂੰ ਆਪਣੇ ਸਾਥੀ ਦੇਸ਼ਵਾਸੀਆਂ ਵਿੱਚ ਫੈਲਾਉਣ ਲਈ ਸਖ਼ਤ ਮਿਹਨਤ ਕਰਾਂਗਾ।"
+  },
+  {
+    "id": "bg-mr-omkar",
+    "name": "Omkar",
+    "languageId": "mr",
+    "languageName": "Marathi",
+    "region": "India",
+    "audioUrl": "/voices/bg-mr.wav",
+    "refText": "यासाठी एखादं टूर पॅकेज सुचवाल का?"
+  }
+]

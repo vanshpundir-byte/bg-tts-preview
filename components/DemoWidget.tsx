@@ -2,19 +2,27 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Upload, Play, Pause, Loader2, FileAudio, Zap, Globe, ChevronDown, Check, X, RefreshCw } from 'lucide-react';
 import { generateSpeech, fileToBase64 } from '../services/ttsService';
 import { transcribeAudio } from '../services/transcriptionService';
-import { LANGUAGE_DEMOS, VOICE_PRESETS } from '../constants';
+import { LANGUAGE_DEMOS } from '../constants';
+import { BharatGenVoice } from '../types';
 import LogoVisualizer from './LogoVisualizer';
+
 
 const DemoWidget: React.FC = () => {
   // State
+  const [activeTab, setActiveTab] = useState<'clone' | 'bharatgen'>('clone');
   const [selectedLang, setSelectedLang] = useState(LANGUAGE_DEMOS[0]);
   const [selectedDemoIdx, setSelectedDemoIdx] = useState(0);
-  const [selectedVoiceId, setSelectedVoiceId] = useState(
-    VOICE_PRESETS[0]?.id || 'custom'
-  );
-  const [refSource, setRefSource] = useState<'preset' | 'upload'>('preset');
-  const [refFile, setRefFile] = useState<File | null>(null);
-  const [refText, setRefText] = useState(VOICE_PRESETS[0]?.refText || '');
+  const [cloneSelectedLang, setCloneSelectedLang] = useState(LANGUAGE_DEMOS[0]);
+  const [cloneSelectedDemoIdx, setCloneSelectedDemoIdx] = useState(0);
+  const [cloneRefFile, setCloneRefFile] = useState<File | null>(null);
+  const [cloneRefText, setCloneRefText] = useState('');
+  const [cloneRefSource] = useState<'upload'>('upload');
+  const [cloneUploadFile, setCloneUploadFile] = useState<File | null>(null);
+  const [bharatgenVoices, setBharatgenVoices] = useState<BharatGenVoice[]>([]);
+  const [bharatgenError, setBharatgenError] = useState<string | null>(null);
+  const [bharatgenSelectedId, setBharatgenSelectedId] = useState<string | null>(null);
+  const [bharatgenRefFile, setBharatgenRefFile] = useState<File | null>(null);
+  const [bharatgenRefText, setBharatgenRefText] = useState('');
   const [genText, setGenText] = useState(LANGUAGE_DEMOS[0].demos[0].actual_text);
   const [isLoading, setIsLoading] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
@@ -30,66 +38,110 @@ const DemoWidget: React.FC = () => {
   
   // UI State
   const [isLangOpen, setIsLangOpen] = useState(false);
+  const [isBharatgenOpen, setIsBharatgenOpen] = useState(false);
 
   // Refs
   const audioRef = useRef<HTMLAudioElement>(null);
   const refPreviewRef = useRef<HTMLAudioElement>(null);
-  const selectedVoice = VOICE_PRESETS.find((voice) => voice.id === selectedVoiceId) || null;
+  const activeRefFile = activeTab === 'clone' ? cloneRefFile : bharatgenRefFile;
+  const activeRefText = activeTab === 'clone' ? cloneRefText : bharatgenRefText;
+  const activeRefSource = activeTab === 'clone' ? cloneRefSource : 'bharatgen';
 
   // Effects
   useEffect(() => {
     setGenText(selectedLang.demos[selectedDemoIdx].actual_text);
   }, [selectedLang, selectedDemoIdx]);
 
+  const resolveAssetUrl = (url: string) => {
+    if (/^https?:\/\//.test(url)) return url;
+    const base = (import.meta as any).env?.BASE_URL || '/';
+    return `${base}${url.replace(/^\//, '')}`;
+  };
+
+  const loadAudioAsFile = async (url: string, filename: string) => {
+    const resolvedUrl = resolveAssetUrl(url);
+    const response = await fetch(resolvedUrl);
+    if (!response.ok) {
+      throw new Error(`Audio not found (${response.status})`);
+    }
+    const blob = await response.blob();
+    return new File([blob], filename, { type: blob.type || 'audio/wav' });
+  };
+
   useEffect(() => {
-    if (!selectedVoice) return;
+    if (activeTab !== 'clone') return;
+    setCloneSelectedLang(selectedLang);
+    setCloneSelectedDemoIdx(selectedDemoIdx);
+  }, [activeTab, selectedLang, selectedDemoIdx]);
+
+  useEffect(() => {
+    if (activeTab !== 'clone') return;
+    setSelectedLang(cloneSelectedLang);
+    setSelectedDemoIdx(cloneSelectedDemoIdx);
+  }, [activeTab, cloneSelectedLang, cloneSelectedDemoIdx]);
+
+
+  useEffect(() => {
+    let isActive = true;
+    const loadVoices = async () => {
+      try {
+        setBharatgenError(null);
+        const response = await fetch(resolveAssetUrl('/bharatgen-voices.json'));
+        if (!response.ok) {
+          throw new Error(`Failed to load voices (${response.status})`);
+        }
+        const data = await response.json();
+        if (!Array.isArray(data)) {
+          throw new Error('Invalid voices data');
+        }
+        if (!isActive) return;
+        setBharatgenVoices(data as BharatGenVoice[]);
+        if (!bharatgenSelectedId && data.length > 0) {
+          setBharatgenSelectedId(data[0].id);
+        }
+      } catch (err: any) {
+        if (!isActive) return;
+        setBharatgenError(err?.message || 'Failed to load BharatGen voices');
+      }
+    };
+    loadVoices();
+    return () => {
+      isActive = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!bharatgenSelectedId) return;
+    const selected = bharatgenVoices.find((voice) => voice.id === bharatgenSelectedId);
+    if (!selected) return;
 
     let isActive = true;
-    const loadPreset = async () => {
-      setRefSource('preset');
-      setTranscriptionError(null);
-      setError(null);
-      setIsTranscribing(false);
-      setRefText(selectedVoice.refText || '');
+    const loadVoice = async () => {
+      try {
+        setBharatgenError(null);
+        setBharatgenRefText(selected.refText || '');
+        const file = await loadAudioAsFile(selected.audioUrl, `${selected.id}.wav`);
+        if (!isActive) return;
+        setBharatgenRefFile(file);
+      } catch (err: any) {
+        if (!isActive) return;
+        setBharatgenError(err?.message || 'Failed to load voice');
+      }
+    };
+    loadVoice();
 
-      const matchingLang = LANGUAGE_DEMOS.find(
-        (lang) => lang.id === selectedVoice.languageId
-      );
+    if (activeTab === 'bharatgen') {
+      const matchingLang = LANGUAGE_DEMOS.find((lang) => lang.id === selected.languageId);
       if (matchingLang) {
         setSelectedLang(matchingLang);
         setSelectedDemoIdx(0);
       }
-
-      try {
-        const resolveAssetUrl = (url: string) => {
-          if (/^https?:\/\//.test(url)) return url;
-          const base = (import.meta as any).env?.BASE_URL || '/';
-          return `${base}${url.replace(/^\//, '')}`;
-        };
-        const presetUrl = resolveAssetUrl(selectedVoice.audioUrl);
-        const response = await fetch(presetUrl);
-        if (!response.ok) {
-          throw new Error(`Preset audio not found (${response.status})`);
-        }
-        const blob = await response.blob();
-        if (!isActive) return;
-        const file = new File([blob], `${selectedVoice.id}.wav`, {
-          type: blob.type || 'audio/wav'
-        });
-        setRefFile(file);
-        setAutoGeneratePending(true);
-      } catch (err: any) {
-        if (!isActive) return;
-        setError(err?.message || 'Failed to load voice preset');
-      }
-    };
-
-    loadPreset();
+    }
 
     return () => {
       isActive = false;
     };
-  }, [selectedVoiceId]);
+  }, [bharatgenSelectedId, bharatgenVoices, activeTab]);
 
   // Auto-play when audio is generated
   useEffect(() => {
@@ -102,25 +154,26 @@ const DemoWidget: React.FC = () => {
   }, [generatedAudioUrl]);
 
   useEffect(() => {
-    if (!refFile) {
+    if (!activeRefFile) {
       setRefPreviewUrl(null);
       setIsRefPlaying(false);
       return;
     }
-    const url = URL.createObjectURL(refFile);
+    const url = URL.createObjectURL(activeRefFile);
     setRefPreviewUrl(url);
     return () => {
       URL.revokeObjectURL(url);
     };
-  }, [refFile]);
+  }, [activeRefFile]);
 
   useEffect(() => {
     if (!autoGeneratePending) return;
     if (isTranscribing || isLoading) return;
-    if (!refFile || !refText.trim()) return;
+    if (activeTab !== 'clone') return;
+    if (!activeRefFile || !activeRefText.trim()) return;
     setAutoGeneratePending(false);
     handleGenerate();
-  }, [autoGeneratePending, isTranscribing, isLoading, refFile, refText]);
+  }, [autoGeneratePending, isTranscribing, isLoading, activeRefFile, activeRefText, activeTab]);
 
   useEffect(() => {
     if (!isLoading) return;
@@ -135,10 +188,10 @@ const DemoWidget: React.FC = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setSelectedVoiceId('custom');
-      setRefSource('upload');
-      setRefFile(file);
-      setRefText('');
+      setActiveTab('clone');
+      setCloneRefFile(file);
+      setCloneUploadFile(file);
+      setCloneRefText('');
       setTranscriptionError(null);
       setError(null);
       setAutoGeneratePending(true);
@@ -146,7 +199,7 @@ const DemoWidget: React.FC = () => {
       setIsTranscribing(true);
       transcribeAudio(file, selectedLang.id)
         .then((text) => {
-          setRefText(text || '');
+          setCloneRefText(text || '');
         })
         .catch((err: any) => {
           setTranscriptionError(err?.message || 'Transcription failed');
@@ -159,15 +212,15 @@ const DemoWidget: React.FC = () => {
   };
 
   const handleGenerate = async () => {
-    if (isTranscribing) {
+    if (activeTab === 'clone' && isTranscribing) {
         setError("Transcription in progress");
         return;
     }
-    if (!refFile) {
-        setError("Upload a voice sample first");
+    if (!activeRefFile) {
+        setError(activeTab === 'bharatgen' ? "Select a BharatGen voice first" : "Upload a voice sample first");
         return;
     }
-    if (!refText.trim()) {
+    if (!activeRefText.trim()) {
         setError("Reference text is required");
         return;
     }
@@ -188,12 +241,12 @@ const DemoWidget: React.FC = () => {
     setGeneratedAudioUrl(null);
 
     try {
-      const audioBase64 = await fileToBase64(refFile);
+      const audioBase64 = await fileToBase64(activeRefFile);
       const url = await generateSpeech({
         ref_audio_base64: audioBase64,
-        ref_text: refText,
+        ref_text: activeRefText,
         gen_text: genText,
-        lang: selectedLang.id === 'hi' ? 'hi' : 'en'
+        lang: selectedLang.id
       });
       setGeneratedAudioUrl(url);
       if (generateStartRef.current) {
@@ -228,21 +281,62 @@ const DemoWidget: React.FC = () => {
     }
   };
 
+  const stopPlayback = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+    if (refPreviewRef.current) {
+      refPreviewRef.current.pause();
+      refPreviewRef.current.currentTime = 0;
+    }
+    setIsPlaying(false);
+    setIsRefPlaying(false);
+  };
+
+  const handleTabChange = (tab: 'clone' | 'bharatgen') => {
+    if (tab === activeTab) return;
+    stopPlayback();
+    setActiveTab(tab);
+    setError(null);
+    setTranscriptionError(null);
+    setIsLangOpen(false);
+    setIsBharatgenOpen(false);
+    setAutoGeneratePending(false);
+  };
+
+  const isGenerateDisabled =
+    isLoading || (activeTab === 'clone' && isTranscribing) || !activeRefFile;
+
   return (
     <div className="flex flex-col lg:flex-row h-full min-h-[600px] bg-white">
         
       {/* --- LEFT COLUMN: INPUT CANVAS --- */}
       <div className="flex-1 flex flex-col p-6 md:p-10 relative">
         
-        {/* Top Controls (Task Selector Look-alike) */}
-        <div className="flex items-center gap-3 mb-6">
-            <div className="px-4 py-1.5 bg-[color:rgb(var(--brand-blue)/0.08)] rounded-full text-sm font-semibold text-[color:rgb(var(--brand-blue))] flex items-center gap-2">
+        {/* Top Tabs */}
+        <div className="flex items-center gap-2 mb-6">
+            <button
+                onClick={() => handleTabChange('clone')}
+                className={`px-4 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2 transition-all ${
+                  activeTab === 'clone'
+                    ? 'bg-[color:rgb(var(--brand-blue)/0.12)] text-[color:rgb(var(--brand-blue))] shadow-sm'
+                    : 'bg-slate-50 text-slate-500 hover:text-[color:rgb(var(--brand-blue))]'
+                }`}
+            >
                 <Zap size={14} className="text-[color:rgb(var(--brand-orange))] fill-[color:rgb(var(--brand-orange))]" />
                 Voice Cloning
-            </div>
-            <div className="px-4 py-1.5 bg-slate-50 border border-slate-100 rounded-full text-sm font-medium text-slate-500">
-                Sooktam v2
-            </div>
+            </button>
+            <button
+                onClick={() => handleTabChange('bharatgen')}
+                className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
+                  activeTab === 'bharatgen'
+                    ? 'bg-[color:rgb(var(--brand-orange)/0.12)] text-[color:rgb(var(--brand-orange))] shadow-sm'
+                    : 'bg-slate-50 text-slate-500 hover:text-[color:rgb(var(--brand-orange))]'
+                }`}
+            >
+                BharatGen Voices
+            </button>
         </div>
 
         {/* Text Input Area */}
@@ -252,12 +346,12 @@ const DemoWidget: React.FC = () => {
                 onChange={(e) => setGenText(e.target.value)}
                 placeholder="Type something here to generate speech..."
                 className="w-full h-[120px] md:h-[140px] lg:h-[150px] resize-none text-base md:text-lg font-light text-slate-800 placeholder:text-slate-300 outline-none bg-transparent leading-relaxed"
-                maxLength={80}
+                maxLength={300}
                 spellCheck={false}
             />
             {/* Character Count */}
             <div className="absolute bottom-0 right-0 text-xs text-slate-300 font-medium">
-                {genText.length}/80
+                {genText.length}/300
             </div>
         </div>
 
@@ -319,11 +413,11 @@ const DemoWidget: React.FC = () => {
 
                 <button
                     onClick={handleGenerate}
-                    disabled={isLoading || isTranscribing || !refFile}
+                    disabled={isGenerateDisabled}
                     className={`
                         group relative px-8 py-4 rounded-full font-bold text-white shadow-lg transition-all duration-300
                         flex items-center gap-3 overflow-hidden
-                        ${isLoading || isTranscribing || !refFile 
+                        ${isGenerateDisabled 
                             ? 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none' 
                             : 'bg-gradient-to-r from-[color:rgb(var(--brand-orange))] to-[color:rgb(var(--brand-blue))] hover:scale-105 hover:shadow-[0_20px_40px_-20px_rgb(var(--brand-orange)/0.6)]'}
                     `}
@@ -371,176 +465,224 @@ const DemoWidget: React.FC = () => {
 
         {/* Settings Form */}
         <div className="space-y-6">
-            
-            {/* 1. Voice Source */}
-            <div className="space-y-3">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Voice Library</label>
-                <div className="flex flex-wrap gap-2">
-                    {VOICE_PRESETS.map((voice) => (
-                        <button
-                            key={voice.id}
-                            onClick={() => setSelectedVoiceId(voice.id)}
-                            className={`text-[10px] font-semibold px-3 py-1.5 rounded-full border transition-all ${
-                                selectedVoiceId === voice.id
-                                    ? 'bg-[color:rgb(var(--brand-blue)/0.12)] border-[color:rgb(var(--brand-blue)/0.4)] text-[color:rgb(var(--brand-blue))]'
-                                    : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'
-                            }`}
-                        >
-                            {voice.name}
-                        </button>
-                    ))}
-                    <button
-                        onClick={() => {
-                            setSelectedVoiceId('custom');
-                            setRefSource('upload');
-                            if (refSource === 'preset') {
-                                setRefFile(null);
-                                setRefText('');
-                            }
-                        }}
-                        className={`text-[10px] font-semibold px-3 py-1.5 rounded-full border transition-all ${
-                            selectedVoiceId === 'custom'
-                                ? 'bg-[color:rgb(var(--brand-orange)/0.12)] border-[color:rgb(var(--brand-orange)/0.4)] text-[color:rgb(var(--brand-orange))]'
-                                : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'
-                        }`}
-                    >
-                        Custom Upload
-                    </button>
-                </div>
+            <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    {activeTab === 'clone' ? 'Reference Voice' : 'BharatGen Voices'}
+                </label>
+            </div>
 
-                {!refFile ? (
-                    <div className="relative group">
-                        <input 
-                            type="file" 
-                            accept=".wav"
-                            onChange={handleFileChange}
-                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                        />
-                        <div className="h-20 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 group-hover:bg-[color:rgb(var(--brand-orange)/0.12)] group-hover:border-[color:rgb(var(--brand-orange)/0.4)] transition-all flex flex-col items-center justify-center gap-1">
-                            <Upload className="text-slate-400 group-hover:text-[color:rgb(var(--brand-orange))] transition-colors" size={20} />
-                            <span className="text-xs font-medium text-slate-500 group-hover:text-[color:rgb(var(--brand-orange))]">Upload Reference Voice (.wav)</span>
+            {activeTab === 'clone' ? (
+                <div className="space-y-3">
+                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Custom Upload</label>
+                        {!cloneUploadFile ? (
+                            <div className="relative group">
+                                <input 
+                                    type="file" 
+                                    accept=".wav"
+                                    onChange={handleFileChange}
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                />
+                                <div className="h-20 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 group-hover:bg-[color:rgb(var(--brand-orange)/0.12)] group-hover:border-[color:rgb(var(--brand-orange)/0.4)] transition-all flex flex-col items-center justify-center gap-1">
+                                    <Upload className="text-slate-400 group-hover:text-[color:rgb(var(--brand-orange))] transition-colors" size={20} />
+                                    <span className="text-xs font-medium text-slate-500 group-hover:text-[color:rgb(var(--brand-orange))]">Upload Reference Voice (.wav)</span>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="p-3 bg-white border border-[color:rgb(var(--brand-orange)/0.4)] rounded-xl shadow-sm flex items-center justify-between gap-3">
+                                 <div className="flex items-center gap-3">
+                                     <div className="w-10 h-10 rounded-full bg-[color:rgb(var(--brand-orange)/0.16)] flex items-center justify-center text-[color:rgb(var(--brand-orange))]">
+                                         <FileAudio size={20} />
+                                     </div>
+                                     <div className="flex flex-col">
+                                         <span className="text-sm font-bold text-slate-700 truncate max-w-[150px]">
+                                            {cloneUploadFile.name}
+                                         </span>
+                                         <span className="text-[10px] text-slate-400">
+                                            Custom Voice
+                                         </span>
+                                     </div>
+                                 </div>
+                                 <div className="flex items-center gap-2">
+                                    {refPreviewUrl && (
+                                        <button
+                                            onClick={toggleRefPlay}
+                                            className="h-7 w-7 rounded-full bg-[color:rgb(var(--brand-blue)/0.12)] text-[color:rgb(var(--brand-blue))] flex items-center justify-center hover:bg-[color:rgb(var(--brand-blue)/0.2)] transition-colors"
+                                            title={isRefPlaying ? 'Pause reference' : 'Play reference'}
+                                        >
+                                            {isRefPlaying ? <Pause size={12} /> : <Play size={12} className="translate-x-[1px]" />}
+                                        </button>
+                                    )}
+                                    <button
+                                        onClick={() => {
+                                          setCloneUploadFile(null);
+                                          setCloneRefFile(null);
+                                          setCloneRefText('');
+                                        }}
+                                        className="p-2 hover:bg-slate-100 rounded-full text-slate-400 hover:text-red-500 transition-colors"
+                                    >
+                                         <X size={16} />
+                                    </button>
+                                 </div>
+                            </div>
+                        )}
+                </div>
+            ) : (
+                <div className="space-y-3">
+                    {bharatgenError && (
+                        <div className="text-xs text-red-500 bg-red-50 border border-red-100 px-3 py-2 rounded-lg">
+                            {bharatgenError}
                         </div>
+                    )}
+                    <div className="relative">
+                        <button
+                            onClick={() => setIsBharatgenOpen((prev) => !prev)}
+                            className="w-full p-3 bg-white border border-slate-200 rounded-xl shadow-sm flex items-center justify-between hover:border-[color:rgb(var(--brand-blue))] transition-colors"
+                        >
+                            <div className="text-left">
+                                <div className="text-sm font-bold text-slate-700">
+                                    {bharatgenVoices.find((voice) => voice.id === bharatgenSelectedId)?.name || 'Select a voice'}
+                                </div>
+                                <div className="text-[10px] text-slate-400">
+                                    {bharatgenVoices.find((voice) => voice.id === bharatgenSelectedId)?.languageName || 'Select language'}
+                                </div>
+                            </div>
+                            <ChevronDown size={16} className={`text-slate-400 transition-transform ${isBharatgenOpen ? 'rotate-180' : ''}`} />
+                        </button>
+
+                        {isBharatgenOpen && (
+                            <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-xl shadow-xl z-20 max-h-64 overflow-y-auto p-1">
+                                {bharatgenVoices.map((voice) => {
+                                    const isSelected = voice.id === bharatgenSelectedId;
+                                    return (
+                                        <button
+                                            key={voice.id}
+                                            onClick={() => {
+                                                setBharatgenSelectedId(voice.id);
+                                                setIsBharatgenOpen(false);
+                                            }}
+                                            className={`w-full text-left px-3 py-2 rounded-lg text-sm flex items-center justify-between ${
+                                                isSelected
+                                                  ? 'bg-[color:rgb(var(--brand-blue)/0.12)] text-[color:rgb(var(--brand-blue))]'
+                                                  : 'hover:bg-slate-50 text-slate-600'
+                                            }`}
+                                        >
+                                            <span className="font-semibold">{voice.name}</span>
+                                            <span className="text-[10px] text-slate-400">{voice.languageName}</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        )}
                     </div>
-                ) : (
-                    <div className="p-3 bg-white border border-[color:rgb(var(--brand-orange)/0.35)] rounded-xl shadow-sm flex items-center justify-between gap-3">
-                         <div className="flex items-center gap-3">
-                             <div className="w-10 h-10 rounded-full bg-[color:rgb(var(--brand-orange)/0.16)] flex items-center justify-center text-[color:rgb(var(--brand-orange))]">
-                                 <FileAudio size={20} />
-                             </div>
-                             <div className="flex flex-col">
-                                 <span className="text-sm font-bold text-slate-700 truncate max-w-[150px]">
-                                    {refSource === 'preset' && selectedVoice ? `${selectedVoice.name} Voice` : refFile.name}
-                                 </span>
-                                 <span className="text-[10px] text-slate-400">
-                                    {refSource === 'preset' ? 'Preset Voice' : 'Custom Voice'}
-                                 </span>
-                             </div>
-                         </div>
-                         <div className="flex items-center gap-2">
-                            {refSource === 'upload' && refPreviewUrl && (
-                                <button
-                                    onClick={toggleRefPlay}
-                                    className="h-7 w-7 rounded-full bg-[color:rgb(var(--brand-blue)/0.12)] text-[color:rgb(var(--brand-blue))] flex items-center justify-center hover:bg-[color:rgb(var(--brand-blue)/0.2)] transition-colors"
-                                    title={isRefPlaying ? 'Pause reference' : 'Play reference'}
-                                >
-                                    {isRefPlaying ? <Pause size={12} /> : <Play size={12} className="translate-x-[1px]" />}
-                                </button>
-                            )}
-                            <button
-                                onClick={() => {
-                                  setRefFile(null);
-                                  setRefText('');
-                                  setSelectedVoiceId('custom');
-                                  setRefSource('upload');
-                                }}
-                                className="p-2 hover:bg-slate-100 rounded-full text-slate-400 hover:text-red-500 transition-colors"
-                            >
-                                 <X size={16} />
-                            </button>
-                         </div>
-                    </div>
-                )}
-                
-                {/* Transcript Input */}
-                <div className="pt-2">
-                    <input 
-                        type="text"
-                        value={refText}
-                        onChange={(e) => setRefText(e.target.value)}
-                        placeholder={refSource === 'preset' ? 'Reference transcript' : 'Transcription will appear here...'}
-                        disabled={isTranscribing}
-                        className="w-full text-xs bg-slate-100 border-none rounded-lg px-3 py-2 text-slate-600 focus:ring-1 focus:ring-[color:rgb(var(--brand-orange))] placeholder-slate-400 disabled:opacity-70"
-                    />
-                    <div className="mt-1 flex items-center justify-between text-[10px] text-slate-400 pl-1">
-                        <span>*Required for accurate cloning style matching</span>
-                        {isTranscribing && <span className="text-[color:rgb(var(--brand-blue))]">Transcribing with Whisper...</span>}
-                        {!isTranscribing && transcriptionError && <span className="text-red-500">{transcriptionError}</span>}
-                        {!isTranscribing && !transcriptionError && refSource === 'preset' && <span>Preset transcript</span>}
-                    </div>
+                    {activeRefSource === 'bharatgen' && refPreviewUrl && (
+                        <button
+                            onClick={toggleRefPlay}
+                            className="mt-1 inline-flex items-center gap-2 text-[11px] text-[color:rgb(var(--brand-blue))] hover:text-[color:rgb(var(--brand-orange))] transition-colors"
+                        >
+                            {isRefPlaying ? <Pause size={12} /> : <Play size={12} />}
+                            Preview selected voice
+                        </button>
+                    )}
+                </div>
+            )}
+
+            {/* Transcript Input */}
+            <div className="pt-2">
+                <input 
+                    type="text"
+                    value={activeRefText}
+                    onChange={(e) => {
+                        if (activeTab === 'clone') {
+                            setCloneRefText(e.target.value);
+                        } else {
+                            setBharatgenRefText(e.target.value);
+                        }
+                    }}
+                    placeholder={activeTab === 'clone' ? 'Transcription will appear here...' : 'Reference transcript'}
+                    disabled={activeTab === 'clone' && isTranscribing}
+                    className="w-full text-xs bg-slate-100 border-none rounded-lg px-3 py-2 text-slate-600 focus:ring-1 focus:ring-[color:rgb(var(--brand-orange))] placeholder-slate-400 disabled:opacity-70"
+                />
+                <div className="mt-1 flex items-center justify-between text-[10px] text-slate-400 pl-1">
+                    <span>*Required for accurate cloning style matching</span>
+                    {activeTab === 'clone' && isTranscribing && (
+                        <span className="text-[color:rgb(var(--brand-blue))]">Transcribing with Whisper...</span>
+                    )}
+                    {activeTab === 'clone' && !isTranscribing && transcriptionError && (
+                        <span className="text-red-500">{transcriptionError}</span>
+                    )}
+                    {activeTab === 'bharatgen' && (
+                        <span>Preset transcript</span>
+                    )}
                 </div>
             </div>
 
             {/* 2. Language Selector */}
-            <div className="space-y-2 relative">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Output Language</label>
-                
-                <div className="relative">
-                    <button 
-                        onClick={() => setIsLangOpen(!isLangOpen)}
-                        className="w-full p-3 bg-white border border-slate-200 rounded-xl shadow-sm flex items-center justify-between hover:border-[color:rgb(var(--brand-blue))] transition-colors"
-                    >
-                        <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-[color:rgb(var(--brand-blue)/0.12)] text-[color:rgb(var(--brand-blue))] flex items-center justify-center">
-                                <Globe size={16} />
-                            </div>
-                            <div className="text-left">
-                                <div className="text-sm font-bold text-slate-700">{selectedLang.name}</div>
-                                <div className="text-[10px] text-slate-400">{selectedLang.scriptLabel}</div>
-                            </div>
-                        </div>
-                        <ChevronDown size={16} className={`text-slate-400 transition-transform ${isLangOpen ? 'rotate-180' : ''}`} />
-                    </button>
-
-                    {/* Dropdown */}
-                    {isLangOpen && (
-                        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-xl shadow-xl z-20 max-h-60 overflow-y-auto p-1">
-                            {LANGUAGE_DEMOS.map((lang) => (
-                                <button
-                                    key={lang.id}
-                                    onClick={() => {
-                                        setSelectedLang(lang);
-                                        setSelectedDemoIdx(0);
-                                        setIsLangOpen(false);
-                                    }}
-                                    className={`w-full text-left px-3 py-2 rounded-lg text-sm flex items-center justify-between ${selectedLang.id === lang.id ? 'bg-[color:rgb(var(--brand-blue)/0.12)] text-[color:rgb(var(--brand-blue))]' : 'hover:bg-slate-50 text-slate-600'}`}
-                                >
-                                    <span>{lang.name}</span>
-                                    {selectedLang.id === lang.id && <Check size={14} />}
-                                </button>
-                            ))}
-                        </div>
-                    )}
-                </div>
-
-                {/* Preset Chips */}
-                <div className="flex flex-wrap gap-2 pt-1">
-                    {selectedLang.demos.map((demo, idx) => (
-                        <button
-                            key={idx}
-                            onClick={() => setSelectedDemoIdx(idx)}
-                            className={`
-                                text-[10px] font-medium px-2 py-1 rounded-md border transition-all flex items-center gap-1
-                                ${selectedDemoIdx === idx 
-                                    ? 'bg-[color:rgb(var(--brand-orange)/0.12)] border-[color:rgb(var(--brand-orange)/0.35)] text-[color:rgb(var(--brand-orange))]' 
-                                    : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'}
-                            `}
+            {activeTab === 'clone' ? (
+                <div className="space-y-2 relative">
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Output Language</label>
+                    
+                    <div className="relative">
+                        <button 
+                            onClick={() => setIsLangOpen(!isLangOpen)}
+                            className="w-full p-3 bg-white border border-slate-200 rounded-xl shadow-sm flex items-center justify-between hover:border-[color:rgb(var(--brand-blue))] transition-colors"
                         >
-                            {demo.type === 'Code-Mix' && <RefreshCw size={8} />}
-                            {demo.title}
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-lg bg-[color:rgb(var(--brand-blue)/0.12)] text-[color:rgb(var(--brand-blue))] flex items-center justify-center">
+                                    <Globe size={16} />
+                                </div>
+                                <div className="text-left">
+                                    <div className="text-sm font-bold text-slate-700">{selectedLang.name}</div>
+                                    <div className="text-[10px] text-slate-400">{selectedLang.scriptLabel}</div>
+                                </div>
+                            </div>
+                            <ChevronDown size={16} className={`text-slate-400 transition-transform ${isLangOpen ? 'rotate-180' : ''}`} />
                         </button>
-                    ))}
+
+                        {/* Dropdown */}
+                        {isLangOpen && (
+                            <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-xl shadow-xl z-20 max-h-60 overflow-y-auto p-1">
+                                {LANGUAGE_DEMOS.map((lang) => (
+                                    <button
+                                        key={lang.id}
+                                        onClick={() => {
+                                            setSelectedLang(lang);
+                                            setSelectedDemoIdx(0);
+                                            setIsLangOpen(false);
+                                        }}
+                                        className={`w-full text-left px-3 py-2 rounded-lg text-sm flex items-center justify-between ${selectedLang.id === lang.id ? 'bg-[color:rgb(var(--brand-blue)/0.12)] text-[color:rgb(var(--brand-blue))]' : 'hover:bg-slate-50 text-slate-600'}`}
+                                    >
+                                        <span>{lang.name}</span>
+                                        {selectedLang.id === lang.id && <Check size={14} />}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Preset Chips */}
+                    <div className="flex flex-wrap gap-2 pt-1">
+                        {selectedLang.demos.map((demo, idx) => (
+                            <button
+                                key={idx}
+                                onClick={() => setSelectedDemoIdx(idx)}
+                                className={`
+                                    text-[10px] font-medium px-2 py-1 rounded-md border transition-all flex items-center gap-1
+                                    ${selectedDemoIdx === idx 
+                                        ? 'bg-[color:rgb(var(--brand-orange)/0.12)] border-[color:rgb(var(--brand-orange)/0.35)] text-[color:rgb(var(--brand-orange))]' 
+                                        : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'}
+                                `}
+                            >
+                                {demo.type === 'Code-Mix' && <RefreshCw size={8} />}
+                                {demo.title}
+                            </button>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            ) : (
+                <div className="rounded-xl border border-slate-100 bg-white px-3 py-2 text-[10px] text-slate-400">
+                    Output language is locked to the selected speaker.
+                </div>
+            )}
 
         </div>
 

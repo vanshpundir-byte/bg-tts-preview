@@ -190,5 +190,83 @@ export const LANGUAGE_DEMOS: LanguageDemo[] = [
         type: "Normal"
       }
     ]
+  },
+  {
+    id: 'kn',
+    name: 'Kannada',
+    scriptLabel: 'ಕನ್ನಡ',
+    demos: [
+      {
+        title: "Standard Kannada",
+        display_text: "BharatGen is building AI for Indian languages.",
+        actual_text: "ಆದರೆ ಈ ಸಣ್ಣ ಮಳಿಗೆಗಳು ಕ್ಯಾಂಡಿ, ಸಣ್ಣ ಆಟಿಕೆಗಳು ಮತ್ತು ಇತರ ಹಬ್ಬದ ನಿಕ್ನಾಕ್ಸ್ಗಳಂತಹ ಸ್ಟಾಕಿಂಗ್ ಸ್ಟಫರ್ಗಳಿಗೆ ಉತ್ತಮ ಆಯ್ಕೆಯಾಗಬಲ್ಲವು.",
+        type: "Normal"
+      }
+    ]
+  },
+  {
+    id: 'ml',
+    name: 'Malayalam',
+    scriptLabel: 'മലയാളം',
+    demos: [
+      {
+        title: "Standard Malayalam",
+        display_text: "Technology should feel natural in every language.",
+        actual_text: "അവിടുത്തെ സൗകര്യങ്ങളൊക്കെ എന്നെ നന്നായി ആകർഷിച്ചു.",
+        type: "Normal"
+      }
+    ]
+  },
+  {
+    id: 'te',
+    name: 'Telugu',
+    scriptLabel: 'తెలుగు',
+    demos: [
+      {
+        title: "Standard Telugu",
+        display_text: "AI should sound natural in our language.",
+        actual_text: "నా పీహెచ్డీ ప్రోగ్రామ్ అంచనాలు  నన్ను కొంచెం  భయపెడుతున్నాయి.",
+        type: "Normal"
+      }
+    ]
+  },
+  {
+    id: 'ur',
+    name: 'Urdu',
+    scriptLabel: 'اردو',
+    demos: [
+      {
+        title: "Standard Urdu",
+        display_text: "BharatGen gives voice to every language.",
+        actual_text: "ہماچل ایکسپریس",
+        type: "Normal"
+      }
+    ]
+  },
+  {
+    id: 'or',
+    name: 'Odia',
+    scriptLabel: 'ଓଡିଆ',
+    demos: [
+      {
+        title: "Standard Odia",
+        display_text: "Language is identity.",
+        actual_text: "ନିଜର ସାଧୁତା ଯୋଗୁ ସେ ଉଭୟ ଇଉରୋପୀୟ ଓ ନେଟିଭମାନଙ୍କ ଦ୍ୱାରା ସର୍ବତୋଭାବେ ସମ୍ମାନିତ।",
+        type: "Normal"
+      }
+    ]
+  },
+  {
+    id: 'pa',
+    name: 'Punjabi',
+    scriptLabel: 'ਪੰਜਾਬੀ',
+    demos: [
+      {
+        title: "Standard Punjabi",
+        display_text: "BharatGen brings AI to every language.",
+        actual_text: "ਮੈਂ ਸੱਚੇ ਦਿਲੋਂ ਸਹੁੰ ਖਾਂਦਾ ਹਾਂ ਕਿ ਮੈਂ ਰਾਸ਼ਟਰ ਦੀ ਏਕਤਾ, ਅਖੰਡਤਾ ਅਤੇ ਸੁਰੱਖਿਆ ਨੂੰ ਬਣਾਈ ਰੱਖਣ ਲਈ ਆਪਣੇ ਆਪ ਨੂੰ ਸਮਰਪਿਤ ਕਰਦਾ ਹਾਂ ਅਤੇ ਇਸ ਸੰਦੇਸ਼ ਨੂੰ ਆਪਣੇ ਸਾਥੀ ਦੇਸ਼ਵਾਸੀਆਂ ਵਿੱਚ ਫੈਲਾਉਣ ਲਈ ਸਖ਼ਤ ਮਿਹਨਤ ਕਰਾਂਗਾ।",
+        type: "Normal"
+      }
+    ]
   }
 ];

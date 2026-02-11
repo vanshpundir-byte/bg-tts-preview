@@ -36,3 +36,13 @@ export interface VoicePreset {
   refText?: string;
   languageId?: string;
 }
+
+export interface BharatGenVoice {
+  id: string;
+  name: string;
+  languageId: string;
+  languageName: string;
+  region: string;
+  audioUrl: string;
+  refText: string;
+}
