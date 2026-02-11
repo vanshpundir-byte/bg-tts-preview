@@ -1,0 +1,7 @@
+{
+  "name": "Copy of BharatGen Sooktam Showcase",
+  "description": "A next-generation showcase for BharatGen's Sooktam TTS model, featuring multilingual support, voice cloning, and code-mixing capabilities.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

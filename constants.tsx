@@ -1,0 +1,137 @@
+import { FeatureItem, LanguageDemo } from './types';
+import { Mic, Globe, Repeat, Zap, Layers, Languages } from 'lucide-react';
+
+export const API_URL = "https://800ed9a6a87b.ngrok-free.app/v1/tts";
+
+export const LOGO_URL = "https://i.imgur.com/k2yQ3q7.png";
+
+export const FEATURES: FeatureItem[] = [
+  {
+    title: "Voice Cloning",
+    description: "Clone a speaker’s voice from a short audio sample while preserving natural tone and style.",
+    icon: Mic
+  },
+  {
+    title: "Polyglot Generation",
+    description: "Generate speech seamlessly across 12 languages using a single unified model.",
+    icon: Globe
+  },
+  {
+    title: "Cross-Language Transfer",
+    description: "Use a voice sample in one language to generate speech in another language.",
+    icon: Repeat
+  },
+  {
+    title: "Blazing-Fast Speed",
+    description: "Near-instant speech output designed for real-time applications.",
+    icon: Zap
+  },
+  {
+    title: "Code-Mixed Speech",
+    description: "Naturally handles mixed-language sentences like Hindi–English or Tamil–English.",
+    icon: Layers
+  },
+  {
+    title: "12-Language Support",
+    description: "Supports Indian-accented English, Hindi, Bengali, Gujarati, Kannada, and more.",
+    icon: Languages
+  }
+];
+
+export const LANGUAGE_DEMOS: LanguageDemo[] = [
+  {
+    id: 'hi',
+    name: 'Hindi',
+    scriptLabel: 'हिन्दी',
+    demos: [
+      {
+        title: "Standard Hindi",
+        display_text: "BharatGen is building AI for Indian languages.",
+        actual_text: "भारतजेन भारतीय भाषाओं के लिए एआई बना रहा है।",
+        type: "Normal"
+      },
+      {
+        title: "Code-Mixed Hindi",
+        display_text: "India's diversity, AI's power.",
+        actual_text: "भारत की विविधता, एआई की ताकत।",
+        type: "Code-Mix"
+      }
+    ]
+  },
+  {
+    id: 'mr',
+    name: 'Marathi',
+    scriptLabel: 'मराठी',
+    demos: [
+      {
+        title: "Standard Marathi",
+        display_text: "Our language is not just words, it is our identity.",
+        actual_text: "आपली भाषा म्हणजे केवळ शब्द नाहीत, ती आपली ओळख आहे.",
+        type: "Normal"
+      },
+      {
+        title: "Code-Mixed Marathi",
+        display_text: "AI speaking in our language.",
+        actual_text: "आपल्या भाषेत बोलणारी एआय.",
+        type: "Code-Mix"
+      }
+    ]
+  },
+  {
+    id: 'gu',
+    name: 'Gujarati',
+    scriptLabel: 'ગુજરાતી',
+    demos: [
+      {
+        title: "Standard Gujarati",
+        display_text: "BharatGen puts Indian languages at the center of AI.",
+        actual_text: "ભારતજેન ભારતીય ભાષાઓને એઆઈના કેન્દ્રમાં મૂકે છે.",
+        type: "Normal"
+      },
+      {
+        title: "Code-Mixed Gujarati",
+        display_text: "Building AI with Indian Languages is a future-ready idea.",
+        actual_text: "ઇન્ડિયન લેન્ગ્વેજિસ સાથે એઆઈ બનાવવું એ ફ્યુચર-રેડી વિચાર છે.",
+        type: "Code-Mix"
+      }
+    ]
+  },
+  {
+    id: 'bn',
+    name: 'Bengali',
+    scriptLabel: 'বাংলা',
+    demos: [
+      {
+        title: "Standard Bengali",
+        display_text: "India's identity lives in its languages.",
+        actual_text: "ভারতের পরিচয় তার ভাষার মধ্যেই বেঁচে থাকে।",
+        type: "Normal"
+      },
+      {
+        title: "Tech Focus",
+        display_text: "Technology works best when built on language.",
+        actual_text: "ভাষার উপর ভিত্তি করে তৈরি করা প্রযুক্তি সবার জন্য বেশি কার্যকর।",
+        type: "Normal"
+      }
+    ]
+  },
+  {
+    id: 'ta',
+    name: 'Tamil',
+    scriptLabel: 'தமிழ்',
+    demos: [
+      {
+        title: "Standard Tamil",
+        display_text: "Since the weather was pleasant today, the evening walk was very enjoyable.",
+        actual_text: "இன்று வானிலை இனிமையாக இருந்ததால், மாலை நேர நடைப்பயணம் மிகவும் மகிழ்ச்சியாக இருந்தது.",
+        type: "Normal"
+      },
+      {
+        title: "About BharatGen",
+        display_text: "BharatGen works with the aim of bringing technology to people's daily lives.",
+        actual_text: "பாரத்ஜென் தொழில்நுட்பத்தை மனிதர்களின் தினசரி வாழ்க்கைக்கு பயனுள்ள வகையில் கொண்டு சேர்க்கும் நோக்கத்துடன் செயல்படுகிறது.",
+        type: "Normal"
+      }
+    ]
+  }
+];
