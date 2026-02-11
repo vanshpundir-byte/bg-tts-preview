@@ -1,9 +1,47 @@
-import { FeatureItem, LanguageDemo } from './types';
+import { FeatureItem, LanguageDemo, VoicePreset } from './types';
 import { Mic, Globe, Repeat, Zap, Layers, Languages } from 'lucide-react';
 
 export const API_URL = "https://800ed9a6a87b.ngrok-free.app/v1/tts";
 
-export const LOGO_URL = "https://i.imgur.com/k2yQ3q7.png";
+export const LOGO_URL = "/bharatgen-logo.png";
+
+export const VOICE_PRESETS: VoicePreset[] = [
+  {
+    id: 'hi',
+    name: 'Hindi',
+    audioUrl: '/voices/voice-hi.wav',
+    refText: 'हम जल्द से जल्द इस समस्या का समाधान करेंगे।',
+    languageId: 'hi'
+  },
+  {
+    id: 'bn',
+    name: 'Bengali',
+    audioUrl: '/voices/voice-bn.wav',
+    refText: 'তাতে অবশ্য ভড়ং ভণ্ডামি আর দুর্নীতির শেষ নেই',
+    languageId: 'bn'
+  },
+  {
+    id: 'ta',
+    name: 'Tamil',
+    audioUrl: '/voices/voice-ta.wav',
+    refText: 'சென்னை சென்ட்ரல் விஜயவாடா ஜன் சதாப்தி எக்ஸ்பிரஸ்',
+    languageId: 'ta'
+  },
+  {
+    id: 'mr',
+    name: 'Marathi',
+    audioUrl: '/voices/voice-mr.wav',
+    refText: 'यासाठी एखादं टूर पॅकेज सुचवाल का?',
+    languageId: 'mr'
+  },
+  {
+    id: 'en',
+    name: 'English',
+    audioUrl: '/voices/voice-en.wav',
+    refText: 'Some call me nature, others call me mother nature.',
+    languageId: 'en'
+  }
+];
 
 export const FEATURES: FeatureItem[] = [
   {
@@ -39,6 +77,25 @@ export const FEATURES: FeatureItem[] = [
 ];
 
 export const LANGUAGE_DEMOS: LanguageDemo[] = [
+  {
+    id: 'en',
+    name: 'English',
+    scriptLabel: 'English',
+    demos: [
+      {
+        title: "Standard English",
+        display_text: "BharatGen is building AI for Indian languages.",
+        actual_text: "BharatGen is building AI for Indian languages.",
+        type: "Normal"
+      },
+      {
+        title: "Product Vision",
+        display_text: "Voice cloning that feels natural and fast.",
+        actual_text: "Voice cloning that feels natural and fast.",
+        type: "Normal"
+      }
+    ]
+  },
   {
     id: 'hi',
     name: 'Hindi',

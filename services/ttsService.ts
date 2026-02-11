@@ -1,7 +1,7 @@
 import { API_URL } from '../constants';
 import { TTSRequest, TTSResponse } from '../types';
 
-export const fileToBase64 = (file: File): Promise<string> => {
+export const fileToBase64 = (file: Blob): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);

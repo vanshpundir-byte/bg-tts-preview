@@ -4,11 +4,11 @@ import { LOGO_URL } from './constants';
 
 function App() {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-4 md:p-8 relative overflow-hidden bg-[#F5F7FA]">
+    <div className="min-h-screen w-full flex items-center justify-center p-4 md:p-8 relative overflow-hidden bg-[color:rgb(var(--brand-bg))]">
       
       {/* Ambient Background Gradients (BharatGen Colors: Orange & Blue) */}
-      <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-orange-400/20 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-[color:rgb(var(--brand-orange)/0.18)] rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-[color:rgb(var(--brand-blue)/0.14)] rounded-full blur-[120px] pointer-events-none" />
       
       {/* Main Container */}
       <div className="w-full max-w-[1200px] flex flex-col gap-6 z-10">
@@ -16,8 +16,8 @@ function App() {
         {/* Minimal Header */}
         <div className="flex items-center gap-3 pl-2">
             <img src={LOGO_URL} className="h-8 w-8 object-contain" alt="Logo" />
-            <h1 className="text-2xl font-bold text-slate-800 tracking-tight">
-              BharatGen <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-blue-600">Sooktam</span>
+            <h1 className="text-2xl font-bold text-[color:rgb(var(--brand-ink))] tracking-tight">
+              BharatGen <span className="text-transparent bg-clip-text bg-gradient-to-r from-[color:rgb(var(--brand-orange))] to-[color:rgb(var(--brand-blue))]">Sooktam</span>
             </h1>
         </div>
 

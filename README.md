@@ -16,5 +16,14 @@ View your app in AI Studio: https://ai.studio/apps/drive/1ScFnj9K1YQcbz8j1w9z18d
 1. Install dependencies:
    `npm install`
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+3. (Optional) For Whisper transcription, start the API:
+
+   ```bash
+   cd server
+   pip install -r requirements.txt
+   WHISPER_MODEL=large-v3 WHISPER_DEVICE=cuda uvicorn whisper_api:app --host 0.0.0.0 --port 8001
+   ```
+
+   Then add `VITE_WHISPER_API_URL=http://localhost:8001/transcribe` to `.env.local`.
+4. Run the app:
+    `npm run dev`

@@ -28,3 +28,11 @@ export interface FeatureItem {
   description: string;
   icon: React.ElementType;
 }
+
+export interface VoicePreset {
+  id: string;
+  name: string;
+  audioUrl: string;
+  refText?: string;
+  languageId?: string;
+}

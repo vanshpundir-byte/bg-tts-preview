@@ -7,10 +7,48 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+      @keyframes logo-rock {
+        0% {
+          transform: rotate(-20deg);
+        }
+        50% {
+          transform: rotate(40deg);
+        }
+        100% {
+          transform: rotate(-20deg);
+        }
+      }
+      .logo-rock {
+        animation: logo-rock 4.6s ease-in-out infinite;
+        transform-origin: center;
+      }
+      @keyframes logo-shine-sweep {
+        0% {
+          transform: translateX(-60%) rotate(-12deg);
+        }
+        50% {
+          transform: translateX(0%) rotate(-12deg);
+        }
+        100% {
+          transform: translateX(60%) rotate(-12deg);
+        }
+      }
+      .logo-shine {
+        mix-blend-mode: screen;
+        animation: logo-shine-sweep 2.6s ease-in-out infinite;
+        will-change: transform;
+      }
+      :root {
+        --brand-blue: 5 83 156; /* #05539C */
+        --brand-blue-2: 43 93 137; /* #2B5D89 */
+        --brand-orange: 245 146 34; /* #F59222 */
+        --brand-bg: 237 244 248; /* #EDF4F8 */
+        --brand-ink: 15 36 60; /* #0F243C */
+      }
       body {
         font-family: 'Inter', sans-serif;
-        background-color: #F5F7FA; /* Light Cloud Blue/Gray */
-        color: #1e293b;
+        background-color: rgb(var(--brand-bg));
+        color: rgb(var(--brand-ink));
       }
       /* Custom scrollbar */
       ::-webkit-scrollbar {
@@ -20,11 +58,11 @@
         background: transparent;
       }
       ::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
+        background: rgb(var(--brand-blue-2));
         border-radius: 4px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #94a3b8;
+        background: rgb(var(--brand-blue));
       }
     </style>
   <script type="importmap">
