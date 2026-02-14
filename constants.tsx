@@ -1,7 +1,8 @@
 import { FeatureItem, LanguageDemo, VoicePreset } from './types';
 import { Mic, Globe, Repeat, Zap, Layers, Languages } from 'lucide-react';
 
-export const API_URL = "https://800ed9a6a87b.ngrok-free.app/v1/tts";
+const envApiUrl = (import.meta as any).env?.VITE_TTS_API_URL as string | undefined;
+export const API_URL = envApiUrl && envApiUrl.trim().length > 0 ? envApiUrl : '/api/tts';
 
 export const LOGO_URL = "/bharatgen-logo.png";
 

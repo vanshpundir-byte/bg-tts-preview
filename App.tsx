@@ -17,7 +17,7 @@ function App() {
         <div className="flex items-center gap-3 pl-2">
             <img src={LOGO_URL} className="h-8 w-8 object-contain" alt="Logo" />
             <h1 className="text-2xl font-bold text-[color:rgb(var(--brand-ink))] tracking-tight">
-              BharatGen <span className="text-transparent bg-clip-text bg-gradient-to-r from-[color:rgb(var(--brand-orange))] to-[color:rgb(var(--brand-blue))]">Sooktam</span>
+              BharatGen <span className="text-transparent bg-clip-text bg-gradient-to-r from-[color:rgb(var(--brand-orange))] to-[color:rgb(var(--brand-blue))]">Sooktam 2</span>
             </h1>
         </div>
 

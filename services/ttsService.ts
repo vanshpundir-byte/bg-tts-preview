@@ -16,13 +16,8 @@ export const fileToBase64 = (file: Blob): Promise<string> => {
 };
 
 export const generateSpeech = async (payload: TTSRequest): Promise<string> => {
-  // According to instructions, we default query param to 'en' but it supports 'hi'.
-  // We will respect the payload's lang if it is 'en' or 'hi', otherwise default to 'en' 
-  // as per the "parameter will be en only" constraint note, while sending specific text.
-  
-  // Safe logic: check if supported explicitly by docs, else fallback to 'en'
-  const supportedLangs = ['en', 'hi'];
-  const queryLang = supportedLangs.includes(payload.lang || '') ? payload.lang : 'en';
+  // If language is English, use 'en'. Otherwise default to 'hi'.
+  const queryLang = payload.lang === 'en' ? 'en' : 'hi';
 
   try {
     const response = await fetch(`${API_URL}?lang=${queryLang}`, {

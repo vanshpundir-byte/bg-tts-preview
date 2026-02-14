@@ -6,7 +6,7 @@
     "languageName": "Hindi",
     "region": "India",
     "audioUrl": "/voices/bg-hi.wav",
-    "refText": "पुरी हावड़ा एक्सप्रेस"
+    "refText": "पूरी हावडा एक्सप्रेस"
   },
   {
     "id": "bg-bn-sayan",
@@ -15,7 +15,7 @@
     "languageName": "Bengali",
     "region": "India",
     "audioUrl": "/voices/bg-bn.wav",
-    "refText": "শুধু এ খুনের কথা নয়, নীরজার হরণ বৃত্তান্তও প্রকাশ হয়েছে।"
+    "refText": "সুদু এক খুনের কথা নয়, নিরজার হরণ বৃত্তান তো প্রকাশ হেছে।"
   },
   {
     "id": "bg-gu-darshan",
@@ -24,7 +24,7 @@
     "languageName": "Gujarati",
     "region": "India",
     "audioUrl": "/voices/bg-gu.wav",
-    "refText": "આપણે ખરેખર તો કોઈ બીજાને ન લાવવા જોઈએ."
+    "refText": "આપણે ખરેખર તો કોઈ બીજાને ના લાવવા જોઈએ"
   },
   {
     "id": "bg-kn-kiran",
@@ -33,7 +33,7 @@
     "languageName": "Kannada",
     "region": "India",
     "audioUrl": "/voices/bg-kn.wav",
-    "refText": "ಆದರೆ ಈ ಸಣ್ಣ ಮಳಿಗೆಗಳು ಕ್ಯಾಂಡಿ, ಸಣ್ಣ ಆಟಿಕೆಗಳು ಮತ್ತು ಇತರ ಹಬ್ಬದ ನಿಕ್ನಾಕ್ಸ್ಗಳಂತಹ ಸ್ಟಾಕಿಂಗ್ ಸ್ಟಫರ್ಗಳಿಗೆ ಉತ್ತಮ ಆಯ್ಕೆಯಾಗಬಲ್ಲವು."
+    "refText": "ಆದರೆ ಇಸನ್ನ ಮಳಿಗೆಗಳು, ಕೇಂಡಿ, ಸನ್ನ ಆಟಿಕೆಗಳು, ಮತ್ತು ಇತರ ಹಬ್ಬದ ನಿಕ್ನಾಕ್ಸ್ಗಳಂತಹ ಸ್ಟೋಕಿಂಗ್ ಸ್ಟಾಫರ್ಗಳಿಗೆ ಉತ್ತಮ ಆಯ್ಕೆ ಆಗಬಲ್ಲವು."
   },
   {
     "id": "bg-ml-arun",
@@ -42,7 +42,7 @@
     "languageName": "Malayalam",
     "region": "India",
     "audioUrl": "/voices/bg-ml.wav",
-    "refText": "അവിടുത്തെ സൗകര്യങ്ങളൊക്കെ എന്നെ നന്നായി ആകർഷിച്ചു."
+    "refText": "ਅਵੁਡੁ ਤੁ ਸਵੁਗਿਰੀਂਗੁ ਲੋਕੇ ਎ਨੁ ਨੰਨੈ ਆਗਰਸੀਚੁ."
   },
   {
     "id": "bg-te-raghav",
@@ -51,7 +51,7 @@
     "languageName": "Telugu",
     "region": "India",
     "audioUrl": "/voices/bg-te.wav",
-    "refText": "నా పీహెచ్డీ ప్రోగ్రామ్ అంచనాలు  నన్ను కొంచెం  భయపెడుతున్నాయి."
+    "refText": "నా PhD ప్రోగ్రామ్ అంచునాలు నను కొంచుం భైప్పెడుతునై."
   },
   {
     "id": "bg-ta-karthik",
@@ -60,16 +60,16 @@
     "languageName": "Tamil",
     "region": "India",
     "audioUrl": "/voices/bg-ta.wav",
-    "refText": "சென்னை சென்ட்ரல் விஜயவாடா ஜன் சதாப்தி எக்ஸ்பிரஸ்"
+    "refText": "இது அதிகார பரவலாக்கள் முறையானது உள்ளூர் சமுகங்களுக்கு வலிமை அளிப்பதோடு தொழில் முனைவோரை உக்குவிப்பதன் மூலம் நகர்ப்புரங்களுக்கு மக்கள் புலம் பயர்வதையும் குறைக்கிறது. இதுவே மேக்கின் இந்தியா திட்டத்தின் முக்கிய நோக்கமாகும்."
   },
   {
     "id": "bg-en-vikram",
-    "name": "Vikram",
+    "name": "Sunita",
     "languageId": "en",
     "languageName": "English",
     "region": "India",
     "audioUrl": "/voices/bg-en.wav",
-    "refText": "Some call me nature, others call me mother nature."
+    "refText": "Conferences are vital links to connect local manufacturers with global buyers."
   },
   {
     "id": "bg-ur-zain",
@@ -78,7 +78,7 @@
     "languageName": "Urdu",
     "region": "India",
     "audioUrl": "/voices/bg-ur.wav",
-    "refText": "ہماچل ایکسپریس"
+    "refText": "ہمارچل ایکسپریس"
   },
   {
     "id": "bg-or-manoj",
@@ -87,7 +87,7 @@
     "languageName": "Odia",
     "region": "India",
     "audioUrl": "/voices/bg-or.wav",
-    "refText": "ନିଜର ସାଧୁତା ଯୋଗୁ ସେ ଉଭୟ ଇଉରୋପୀୟ ଓ ନେଟିଭମାନଙ୍କ ଦ୍ୱାରା ସର୍ବତୋଭାବେ ସମ୍ମାନିତ।"
+    "refText": "নিজ্র সাধোথা জকো সে উভয় যুরোপিয় ও নেটি঵ মানংক দ্বারা সর্বতো ভাবে সম্মানিতা।"
   },
   {
     "id": "bg-pa-gurpreet",
@@ -96,7 +96,7 @@
     "languageName": "Punjabi",
     "region": "India",
     "audioUrl": "/voices/bg-pa.wav",
-    "refText": "ਮੈਂ ਸੱਚੇ ਦਿਲੋਂ ਸਹੁੰ ਖਾਂਦਾ ਹਾਂ ਕਿ ਮੈਂ ਰਾਸ਼ਟਰ ਦੀ ਏਕਤਾ, ਅਖੰਡਤਾ ਅਤੇ ਸੁਰੱਖਿਆ ਨੂੰ ਬਣਾਈ ਰੱਖਣ ਲਈ ਆਪਣੇ ਆਪ ਨੂੰ ਸਮਰਪਿਤ ਕਰਦਾ ਹਾਂ ਅਤੇ ਇਸ ਸੰਦੇਸ਼ ਨੂੰ ਆਪਣੇ ਸਾਥੀ ਦੇਸ਼ਵਾਸੀਆਂ ਵਿੱਚ ਫੈਲਾਉਣ ਲਈ ਸਖ਼ਤ ਮਿਹਨਤ ਕਰਾਂਗਾ।"
+    "refText": "ਮੈ ਸਚੇ ਦੀਲੋ ਸੋਂ ਖਾਂਦਾ ਹਾਂ ਕੀ ਮੈ ਰਾਸਟਰ ਦੀ ਏਕਤਾ, ਅਖਾਣਡਤਾ ਅਤੇ ਸੁਰੱਖਿਆ ਨੂ ਬਣਾਈ ਰਖਨ ਲੈ ਅਪਨੇ ਆਪਨੂ ਸਮਰਪਿਤ ਕਰਦਾ ਹਾਂ ਅਤੇ ਇਸ ਸ"
   },
   {
     "id": "bg-mr-omkar",
@@ -105,6 +105,6 @@
     "languageName": "Marathi",
     "region": "India",
     "audioUrl": "/voices/bg-mr.wav",
-    "refText": "यासाठी एखादं टूर पॅकेज सुचवाल का?"
+    "refText": "सत्तत काई न काई नवीन कारेकरम होतस्तात मने दिथे।"
   }
 ]

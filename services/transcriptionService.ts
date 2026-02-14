@@ -15,10 +15,7 @@ export const transcribeAudio = async (
   file: Blob,
   languageHint?: string
 ): Promise<string> => {
-  const apiUrl = import.meta.env.VITE_WHISPER_API_URL as string | undefined;
-  if (!apiUrl) {
-    throw new Error('Whisper API not configured. Set VITE_WHISPER_API_URL in .env.local');
-  }
+  const apiUrl = (import.meta.env.VITE_WHISPER_API_URL as string | undefined) || '/api/whisper';
 
   const audioBase64 = await blobToBase64(file);
   const response = await fetch(apiUrl, {
